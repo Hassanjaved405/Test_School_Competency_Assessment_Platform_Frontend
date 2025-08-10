@@ -3,8 +3,9 @@ import { FiEdit2, FiTrash2, FiSearch, FiUserPlus, FiFilter, FiDownload, FiMail, 
 import { useGetUsersQuery, useUpdateUserMutation, useDeleteUserMutation } from '../../store/api/adminApi';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
+import { UserRole } from '../../types';
 
-interface User {
+interface UserData {
   _id: string;
   firstName: string;
   lastName: string;
@@ -21,7 +22,7 @@ const UserManagement: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editingUser, setEditingUser] = useState<UserData | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -36,7 +37,18 @@ const UserManagement: React.FC = () => {
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
 
-  const users = usersData?.users || [];
+  const users: UserData[] = (usersData?.users || []).map((u: any) => ({
+    _id: u._id,
+    firstName: u.firstName,
+    lastName: u.lastName,
+    email: u.email,
+    role: u.role,
+    isEmailVerified: u.isEmailVerified,
+    createdAt: u.createdAt,
+    lastLogin: u.lastLogin,
+    assessmentsTaken: u.assessmentsTaken || 0,
+    certificatesEarned: u.certificatesEarned || 0
+  }));
   const totalPages = Math.ceil((usersData?.total || 0) / itemsPerPage);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +77,7 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  const handleEditUser = (user: User) => {
+  const handleEditUser = (user: UserData) => {
     setEditingUser(user);
     setShowEditModal(true);
   };
@@ -79,7 +91,7 @@ const UserManagement: React.FC = () => {
         updates: {
           firstName: editingUser.firstName,
           lastName: editingUser.lastName,
-          role: editingUser.role,
+          role: editingUser.role as UserRole,
           isEmailVerified: editingUser.isEmailVerified
         }
       }).unwrap();

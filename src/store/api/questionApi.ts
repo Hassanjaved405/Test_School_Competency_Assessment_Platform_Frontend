@@ -15,6 +15,25 @@ export const questionApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['Question'],
   endpoints: (builder) => ({
+    // New simplified endpoint for QuestionManagement
+    getQuestions: builder.query<
+      { questions: Question[]; total: number; stats?: any },
+      {
+        page?: number;
+        limit?: number;
+        search?: string;
+        competency?: string;
+        difficulty?: string;
+      }
+    >({
+      query: (params) => ({
+        url: '/questions',
+        params,
+      }),
+      providesTags: ['Question'],
+    }),
+    
+    // Original endpoint
     getAllQuestions: builder.query<
       ApiResponse<{ questions: Question[] }>,
       {
@@ -50,12 +69,12 @@ export const questionApi = createApi({
     }),
     updateQuestion: builder.mutation<
       ApiResponse<{ question: Question }>,
-      { id: string; question: Partial<Question> }
+      { id: string; updates?: Partial<Question>; question?: Partial<Question> }
     >({
-      query: ({ id, question }) => ({
+      query: ({ id, updates, question }) => ({
         url: `/questions/${id}`,
         method: 'PUT',
-        body: question,
+        body: updates || question,
       }),
       invalidatesTags: ['Question'],
     }),
@@ -81,6 +100,7 @@ export const questionApi = createApi({
 });
 
 export const {
+  useGetQuestionsQuery,
   useGetAllQuestionsQuery,
   useGetQuestionByIdQuery,
   useGetQuestionStatsQuery,

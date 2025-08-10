@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { FiEdit2, FiTrash2, FiPlus, FiSearch, FiFilter, FiUpload, FiDownload, FiBookOpen, FiCheckCircle } from 'react-icons/fi';
 import { useGetQuestionsQuery, useCreateQuestionMutation, useUpdateQuestionMutation, useDeleteQuestionMutation } from '../../store/api/questionApi';
 import { toast } from 'react-toastify';
+import { CompetencyLevel } from '../../types';
 
-interface Question {
+interface QuestionData {
   _id: string;
   competency: string;
   difficulty: string;
@@ -29,7 +30,7 @@ const QuestionManagement: React.FC = () => {
   const [filterDifficulty, setFilterDifficulty] = useState('all');
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
+  const [editingQuestion, setEditingQuestion] = useState<QuestionData | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -55,7 +56,17 @@ const QuestionManagement: React.FC = () => {
   const [updateQuestion] = useUpdateQuestionMutation();
   const [deleteQuestion] = useDeleteQuestionMutation();
 
-  const questions = questionsData?.questions || [];
+  // Transform questions to match our local format
+  const questions: QuestionData[] = (questionsData?.questions || []).map((q: any) => ({
+    _id: q._id,
+    competency: q.competency,
+    difficulty: q.difficulty || 'basic',
+    questionText: q.questionText,
+    options: q.options ? [q.options.a, q.options.b, q.options.c, q.options.d] : ['', '', '', ''],
+    correctAnswer: ['a', 'b', 'c', 'd'].indexOf(q.correctAnswer) || 0,
+    explanation: q.explanation,
+    createdAt: q.createdAt
+  }));
   const totalPages = Math.ceil((questionsData?.total || 0) / itemsPerPage);
 
   const handleAddQuestion = () => {
@@ -70,7 +81,7 @@ const QuestionManagement: React.FC = () => {
     setShowAddModal(true);
   };
 
-  const handleEditQuestion = (question: Question) => {
+  const handleEditQuestion = (question: QuestionData) => {
     setEditingQuestion(question);
     setFormData({
       competency: question.competency,
@@ -96,14 +107,31 @@ const QuestionManagement: React.FC = () => {
     }
 
     try {
+      // Convert array options to object format for API
+      const questionPayload = {
+        competency: formData.competency,
+        difficulty: formData.difficulty,
+        questionText: formData.questionText,
+        options: {
+          a: formData.options[0],
+          b: formData.options[1],
+          c: formData.options[2],
+          d: formData.options[3]
+        },
+        correctAnswer: ['a', 'b', 'c', 'd'][formData.correctAnswer],
+        explanation: formData.explanation,
+        level: CompetencyLevel.A1, // Default level
+        timeLimit: 60 // Default time limit
+      };
+
       if (showEditModal && editingQuestion) {
         await updateQuestion({
           id: editingQuestion._id,
-          updates: formData
+          updates: questionPayload
         }).unwrap();
         toast.success('Question updated successfully');
       } else {
-        await createQuestion(formData).unwrap();
+        await createQuestion(questionPayload).unwrap();
         toast.success('Question created successfully');
       }
       setShowAddModal(false);

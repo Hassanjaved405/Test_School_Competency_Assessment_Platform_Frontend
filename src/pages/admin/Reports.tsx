@@ -250,7 +250,7 @@ const Reports: React.FC = () => {
               <p className="text-gray-600 text-sm">Average Score</p>
               <p className="text-2xl font-bold">{reportsData?.statistics?.averageScore || 0}%</p>
               <p className="text-sm text-blue-600 mt-1">
-                {reportsData?.statistics?.scoreChange > 0 ? '+' : ''}{reportsData?.statistics?.scoreChange || 0}% change
+                {(reportsData?.statistics?.scoreChange || 0) > 0 ? '+' : ''}{reportsData?.statistics?.scoreChange || 0}% change
               </p>
             </div>
             <FiTrendingUp className="text-3xl text-green-500" />
@@ -312,7 +312,7 @@ const Reports: React.FC = () => {
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h3 className="text-lg font-semibold mb-4">Top Performers</h3>
           <div className="space-y-3">
-            {reportsData?.topPerformers?.length > 0 ? (
+            {reportsData?.topPerformers && reportsData.topPerformers.length > 0 ? (
               reportsData.topPerformers.map((performer: any, index: number) => (
                 <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded">
                   <div className="flex items-center space-x-3">
@@ -371,8 +371,8 @@ const Reports: React.FC = () => {
                   {reportsData?.comparison?.previous?.users || 0}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <span className={`font-medium ${reportsData?.comparison?.userChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {reportsData?.comparison?.userChange > 0 ? '+' : ''}{reportsData?.comparison?.userChange || 0}%
+                  <span className={`font-medium ${(reportsData?.comparison?.userChange || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {(reportsData?.comparison?.userChange || 0) > 0 ? '+' : ''}{reportsData?.comparison?.userChange || 0}%
                   </span>
                 </td>
               </tr>
@@ -387,8 +387,8 @@ const Reports: React.FC = () => {
                   {reportsData?.comparison?.previous?.assessments || 0}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <span className={`font-medium ${reportsData?.comparison?.assessmentChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {reportsData?.comparison?.assessmentChange > 0 ? '+' : ''}{reportsData?.comparison?.assessmentChange || 0}%
+                  <span className={`font-medium ${(reportsData?.comparison?.assessmentChange || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {(reportsData?.comparison?.assessmentChange || 0) > 0 ? '+' : ''}{reportsData?.comparison?.assessmentChange || 0}%
                   </span>
                 </td>
               </tr>
@@ -403,8 +403,8 @@ const Reports: React.FC = () => {
                   {reportsData?.comparison?.previous?.certificates || 0}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <span className={`font-medium ${reportsData?.comparison?.certificateChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {reportsData?.comparison?.certificateChange > 0 ? '+' : ''}{reportsData?.comparison?.certificateChange || 0}%
+                  <span className={`font-medium ${(reportsData?.comparison?.certificateChange || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {(reportsData?.comparison?.certificateChange || 0) > 0 ? '+' : ''}{reportsData?.comparison?.certificateChange || 0}%
                   </span>
                 </td>
               </tr>
@@ -419,8 +419,8 @@ const Reports: React.FC = () => {
                   {reportsData?.comparison?.previous?.avgCompletionTime || 0} min
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <span className={`font-medium ${reportsData?.comparison?.timeChange <= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {reportsData?.comparison?.timeChange > 0 ? '+' : ''}{reportsData?.comparison?.timeChange || 0}%
+                  <span className={`font-medium ${(reportsData?.comparison?.timeChange || 0) <= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {(reportsData?.comparison?.timeChange || 0) > 0 ? '+' : ''}{reportsData?.comparison?.timeChange || 0}%
                   </span>
                 </td>
               </tr>
