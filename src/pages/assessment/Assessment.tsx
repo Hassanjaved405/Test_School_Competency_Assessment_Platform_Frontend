@@ -175,7 +175,7 @@ const Assessment: React.FC = () => {
             </h2>
             <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
               Test your digital competency across multiple levels and earn your certification. 
-              The assessment consists of 3 progressive steps with 44 questions each.
+              The assessment consists of 3 progressive steps with 12 questions each.
             </p>
             <button
               onClick={handleStartAssessment}
@@ -196,9 +196,9 @@ const Assessment: React.FC = () => {
             <div>
               <h3 className="font-semibold text-gray-900 mb-2">Assessment Structure</h3>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Step 1: A1 & A2 Levels (44 questions)</li>
-                <li>• Step 2: B1 & B2 Levels (44 questions)</li>
-                <li>• Step 3: C1 & C2 Levels (44 questions)</li>
+                <li>• Step 1: A1 & A2 Levels (12 questions)</li>
+                <li>• Step 2: B1 & B2 Levels (12 questions)</li>
+                <li>• Step 3: C1 & C2 Levels (12 questions)</li>
                 <li>• 1 minute per question</li>
               </ul>
             </div>
